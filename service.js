@@ -27,7 +27,7 @@ mongo.Db.connect(
     process.env.MONGOLAB_URL ||
     'mongodb://' + config.databaseHost + '/' + config.databaseName,
     function(err, db) {
-        if(err) console.error(err);
+        if(err) console.log(err);
         DB = db;
     }
 );
