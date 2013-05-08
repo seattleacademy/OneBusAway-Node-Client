@@ -18,12 +18,15 @@ var OBA_URL_FACTORY = {
 var OPTIONS = {
 		parser: rest.parsers.json
 };
-var DB = new mongo.Db.connect(
+var DB;
+
+mongo.Db.connect(
     process.env.MONGOLAB_URI ||
     process.env.MONGOLAB_URL ||
     'mongodb://' + config.databaseHost + '/' + config.databaseName,
     function(err, db) {
         if(err) console.error(err);
+        DB = db;
     }
 );
 
