@@ -5,5 +5,8 @@
     "stopIds": [
         "1_68005"
     ],
-    "refreshInterval": 6e5
+    "refreshInterval": 6e5,
+    "client": {
+        "port": 8088
+    }
 }

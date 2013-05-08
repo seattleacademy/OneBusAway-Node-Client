@@ -2,6 +2,7 @@
 var rest = require('restler');
 var mongo = require('mongodb');
 var config = require('./config');
+var express = require('express');
 
 // Constants
 var OBA_API_URL = 'http://api.onebusaway.org/api/where/';
@@ -28,8 +29,9 @@ config.stopIds.forEach(function(stopId) {
         rest.get(OBA_URL_FACTORY.arrivalsAndDepartures(stopId), OPTIONS).on('complete', function(data) {
             DB.collection('stops', function(err, collection) {
                 collection.insert(data, {safe: true}, function(err, records) {
-                    console.log(err);
-                    console.log(JSON.stringify(records));
+                    if(!err) {
+                        console.log("Successfully inserted records.");
+                    }
                 });
             });
         });
@@ -37,6 +39,34 @@ config.stopIds.forEach(function(stopId) {
 
     THREAD_POOL.push(thread);
 });
+
+// Client
+var app = express();
+app.get('/', function(req, res) {
+    DB.collection('stops', function(err, collection) {
+        collection.find({}, {currentTime: 1, 'data.arrivalsAndDepartures': 1}).toArray(function(err, items) {
+            res.send(constructDeltaArray(items));
+        });
+    });
+});
+
+var constructDeltaArray = function(array) {
+    var normalized = {};
+    array.forEach(function(element) {
+        var deltas = [];
+        element.data.arrivalsAndDepartures.forEach(function(arrivalAndDeparture){
+            if (arrivalAndDeparture.scheduledArrivalTime != arrivalAndDeparture.predictedArrivalTime) {
+                deltas.push(
+                    Math.abs(arrivalAndDeparture.scheduledArrivalTime - arrivalAndDeparture.predictedArrivalTime) / 1000
+                );
+            }
+        });
+        normalized[element.currentTime] = deltas;
+    });
+    return normalized;
+};
+
+app.listen(config.client.port);
 
 
 
