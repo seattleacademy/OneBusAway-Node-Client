@@ -18,8 +18,11 @@ var OBA_URL_FACTORY = {
 var OPTIONS = {
 		parser: rest.parsers.json
 };
-var DB = new mongo.Db(config.databaseName, new mongo.Server(config.databaseHost, config.databasePort));
-DB.open(function(err, db) {console.log(err); });
+var DB = new mongo.Db.connect(
+    process.env.MONGOLAB_URI ||
+    process.env.MONGOLAB_URL ||
+    'mongodb://' + config.databaseHost + '/' + config.databaseName
+);
 
 var THREAD_POOL = [];
 
@@ -66,7 +69,7 @@ var constructDeltaArray = function(array) {
     return normalized;
 };
 
-app.listen(config.client.port);
+app.listen(process.env.PORT || config.client.port);
 
 
 
