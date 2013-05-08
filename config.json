@@ -1,0 +1,9 @@
+{
+    "databaseName": "oba",
+    "databaseHost": "127.0.0.1",
+    "databasePort": 27017,
+    "stopIds": [
+        "1_68005"
+    ],
+    "refreshInterval": 6e5
+}
