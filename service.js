@@ -1,3 +1,5 @@
+console.info("Starting...");
+
 // Dependencies
 var rest = require('restler');
 var mongo = require('mongodb');
@@ -76,6 +78,6 @@ var constructDeltaArray = function(array) {
 };
 
 app.listen(process.env.PORT || config.client.port);
-
+console.log("listening on >> " + process.env.PORT || config.client.port);
 
 
