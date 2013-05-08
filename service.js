@@ -21,7 +21,10 @@ var OPTIONS = {
 var DB = new mongo.Db.connect(
     process.env.MONGOLAB_URI ||
     process.env.MONGOLAB_URL ||
-    'mongodb://' + config.databaseHost + '/' + config.databaseName
+    'mongodb://' + config.databaseHost + '/' + config.databaseName,
+    function(err, db) {
+        if(err) console.error(err);
+    }
 );
 
 var THREAD_POOL = [];
