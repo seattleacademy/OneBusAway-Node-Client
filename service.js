@@ -22,10 +22,12 @@ var OPTIONS = {
 };
 var DB;
 
+var mongoUrl = (function(mongo) {
+    return "mongodb://" + mongo.user + ":" + mongo.pass + "@" + mongo.host + ":" + mongo.port + "/" + mongo.name;
+})(config.mongo);
+
 mongo.Db.connect(
-    process.env.MONGOLAB_URI ||
-    process.env.MONGOLAB_URL ||
-    'mongodb://' + config.databaseHost + '/' + config.databaseName,
+    mongoUrl,
     function(err, db) {
         if(err) console.log(err);
         DB = db;
